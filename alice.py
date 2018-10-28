@@ -1,7 +1,30 @@
 import socket
 import _thread
+import time
+from struct import pack
+from Crypto.Hash import SHA256
+from struct import unpack
 from Crypto import Random
 from Crypto.Cipher import AES
+from Crypto.Util import number
+
+def key_exchange():
+	p = number.getPrime(1024)
+	g = number.getPrime(3)
+	conn.send(bytes(str(p), 'utf-8'))
+	print(p)
+	print()
+	time.sleep(1)
+	conn.send(bytes(str(g), 'utf-8'))
+	print(g)
+	print()
+	a = number.getRandomRange(1, p)
+	A = pow(g, a, p)
+	conn.send(bytes(str(A), 'utf-8'))
+	m = conn.recv(1024)
+	B = int(m)
+	print()
+	return str(pow(B, a, p))
 
 def recive_message():
 	while 1:
@@ -24,7 +47,10 @@ host = '127.0.0.1'
 s.bind((host, 5000))
 s.listen(1)
 conn, addr = s.accept()
-key = b'1234567890123456'
+secret = bytes(key_exchange(), 'utf-8')
+key = bytes(SHA256.new(secret).hexdigest(), 'utf-8')[0:32]
+print()
+print(key)
 C = AES.new(key, AES.MODE_ECB)
 
 _thread.start_new_thread(recive_message, ())
