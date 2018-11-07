@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import socket
 import _thread
 import time
@@ -12,18 +13,16 @@ def key_exchange():
 	p = number.getPrime(1024)
 	g = number.getPrime(3)
 	conn.send(bytes(str(p), 'utf-8'))
-	print(p)
-	print()
+	print('p = ' + str(p) + '\n')
 	time.sleep(1)
 	conn.send(bytes(str(g), 'utf-8'))
-	print(g)
-	print()
+	print('g = ' + str(g) + '\n')
 	a = number.getRandomRange(1, p)
 	A = pow(g, a, p)
 	conn.send(bytes(str(A), 'utf-8'))
+	print('A = ' + str(A) + '\n')
 	m = conn.recv(1024)
 	B = int(m)
-	print()
 	return str(pow(B, a, p))
 
 def recive_message():

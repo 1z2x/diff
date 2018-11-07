@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import socket
 import _thread
 from struct import pack
@@ -10,18 +11,14 @@ from Crypto.Cipher import AES
 def key_exchange():
 	m = s.recv(1024)
 	p = int(m)
-	print(p)
-	print()
 	m = s.recv(3)
 	g = int(m)
-	print(g)
-	print()
 	b = number.getRandomRange(1, p)
 	B = pow(g, b, p)
 	m = s.recv(1024)
 	A = int(m)
 	s.send(bytes(str(B), 'utf-8'))
-	print()
+	print('B = ' + str(B) + '\n')
 	return str(pow(A, b, p))
 	
 def recive_message():
