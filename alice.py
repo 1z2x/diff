@@ -48,7 +48,7 @@ def send_message():
         conn.send(encrypted_msg)
 	
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = '150.254.79.110'
+host = '127.0.0.1'
 s.bind((host, 5000))
 s.listen(1)
 conn, addr = s.accept()
