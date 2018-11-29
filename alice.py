@@ -10,24 +10,17 @@ from Crypto.Cipher import AES
 from Crypto.Util import number
 
 def key_exchange():
-	p = 0
-	while number.isPrime(p) == False:
-		q = number.getPrime(512)
-		p = 2*q + 1
-	
+	q = number.getPrime(512)
+	p = 2*q + 1
 	g = 2
 	while pow(g, 2, p) == 1 or pow(g, q, p) == 1: 
 		g = number.getPrime(4)
-	conn.send(bytes(str(p), 'utf-8'))
-	print('p = ' + str(p) + '\n')
-	time.sleep(1)
-	conn.send(bytes(str(g), 'utf-8'))
-	print('g = ' + str(g) + '\n')
 	a = number.getRandomRange(1, p)
 	A = pow(g, a, p)
-	conn.send(bytes(str(A), 'utf-8'))
-	print('A = ' + str(A) + '\n')
+	print(str(p) + '\n' + str(g) + '\n' + str(A))
+	conn.send(bytes(str(p) + ' ' + str(g) + ' ' + str(A), 'utf-8'))
 	m = conn.recv(1024)
+	print(m)
 	B = int(m)
 	return str(pow(B, a, p))
 
@@ -48,7 +41,7 @@ def send_message():
         conn.send(encrypted_msg)
 	
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = '150.254.79.110'
+host = '127.0.0.1'
 s.bind((host, 5000))
 s.listen(1)
 conn, addr = s.accept()

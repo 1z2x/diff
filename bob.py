@@ -9,16 +9,17 @@ from Crypto.Util import number
 from Crypto.Cipher import AES
 
 def key_exchange():
-	m = s.recv(1024)
-	p = int(m)
-	m = s.recv(3)
-	g = int(m)
+
+	
+	m = s.recv(10000)
+	p = int(str(m).split()[0])
+	g = int(str(m).split()[1])
+	A = int(str(m).split()[2])
+	print(str(p) + '\n' + str(g) + '\n' + str(A))
 	b = number.getRandomRange(1, p)
 	B = pow(g, b, p)
-	m = s.recv(1024)
-	A = int(m)
+	print(B)
 	s.send(bytes(str(B), 'utf-8'))
-	print('B = ' + str(B) + '\n')
 	return str(pow(A, b, p))
 	
 def recive_message():
